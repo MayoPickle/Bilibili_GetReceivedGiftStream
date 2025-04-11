@@ -39,6 +39,7 @@ if __name__ == "__main__":
         2: "生成可直接导入 [b green]BiliMessenger[/b green] 使用的大航海数据列表（[b blue]csv[/b blue]格式）",
         3: "生成[b green]所有礼物流水[/b green]列表（[b blue]xlsx[/b blue]格式）",
         4: "同时生成[b yellow]上述三个[/b yellow]文件",
+        5: "导出[b red]原始礼物信息[/b red]（[b blue]csv[/b blue]格式，按时间顺序排列）",
     }
 
     # 询问用户使用什么功能

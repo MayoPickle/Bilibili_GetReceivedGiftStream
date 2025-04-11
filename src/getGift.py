@@ -187,7 +187,7 @@ class GiftInfo:
                     all_gifts_list.extend(gifts_list)
 
                 while has_more:
-                    console.print("[b red]已触发“has_more”[/b red]")
+                    console.print("[b red]已触发'has_more'[/b red]")
                     params = {
                         "last_id": last_id,
                         "limit": maxsize - 1,
@@ -321,6 +321,36 @@ class GiftInfo:
 
             console.print("[b green]{}(大航海).csv[/b green] 已生成！".format(self.name))
 
+    # 导出原始礼物信息为CSV文件（按时间顺序排列）
+    def exportRawGiftsCsv(self, gifts_list):
+        with console.status(
+            f"正在写入[b green]{self.name}(原始礼物信息).csv[/b green]", spinner="line"
+        ):
+            # 按时间倒序排列（从新到旧）
+            sorted_gifts = sorted(gifts_list, key=lambda x: x["time"], reverse=True)
+            
+            # 准备CSV表头（所有可能的字段）
+            if not sorted_gifts:
+                console.print("[b red]Warning: 没有找到礼物数据[/b red]")
+                return
+                
+            headers = list(sorted_gifts[0].keys())
+            
+            # 准备CSV数据
+            csv_data = [headers]
+            for gift in sorted_gifts:
+                row = [gift.get(header, "") for header in headers]
+                csv_data.append(row)
+                
+            # 写入CSV文件
+            with open(
+                self.name + "(原始礼物信息).csv", mode="w", encoding="utf-8-sig", newline=""
+            ) as f:
+                writer = csv.writer(f)
+                writer.writerows(csv_data)
+                
+            console.print("[b green]{}(原始礼物信息).csv[/b green] 已生成！".format(self.name))
+
     async def main(self, choice):
         gifts_list = await self.getGiftInfoOneDay()
         if choice == "1":
@@ -339,3 +369,6 @@ class GiftInfo:
             gift_result, id_index = all_info_handle(gifts_list)
             self.xlsWrite(gift_result, id_index)
             console.print("\n已全部生成完成！")
+        elif choice == "5":
+            self.exportRawGiftsCsv(gifts_list)
+            console.print("\n已导出原始礼物信息CSV！")
